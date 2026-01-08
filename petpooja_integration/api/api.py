@@ -187,11 +187,11 @@ def get_customer(data):
 		customer_doc.customer_type = 'Individual'
 		#Append addional Info if available
 		if data.get('address'):
-			customer_details += f'Address: {data.get('address')}\n'
+			customer_details += f"Address: {data.get('address')}\n"
 		if data.get('phone'):
-			customer_details += f'Phone: {data.get('phone')}\n'
+			customer_details += f"Phone: {data.get('phone')}\n"
 		if data.get('gstin'):
-			customer_details += f'GSTIN: {data.get('gstin')}'
+			customer_details += f"GSTIN: {data.get('gstin')}"
 		customer_doc.customer_details = customer_details
 		customer_doc.save(ignore_permissions=True)
 		customer = customer_doc.name
