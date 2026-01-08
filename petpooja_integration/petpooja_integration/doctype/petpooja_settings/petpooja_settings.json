@@ -1,0 +1,118 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-01-08 09:56:01.767470",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "api_settings_section",
+  "enable_petpooja_apis",
+  "access_token",
+  "section_break_mwbv",
+  "create_customers",
+  "default_customer",
+  "rounding_adjustment_account",
+  "column_break_wxcl",
+  "update_stock",
+  "service_charge_item",
+  "packing_charge_item"
+ ],
+ "fields": [
+  {
+   "default": "0",
+   "fieldname": "enable_petpooja_apis",
+   "fieldtype": "Check",
+   "label": "Enable Petpooja APIs"
+  },
+  {
+   "fieldname": "api_settings_section",
+   "fieldtype": "Section Break",
+   "label": "API Settings"
+  },
+  {
+   "depends_on": "enable_petpooja_apis",
+   "fieldname": "access_token",
+   "fieldtype": "Password",
+   "label": "Access Token",
+   "mandatory_depends_on": "enable_petpooja_apis"
+  },
+  {
+   "fieldname": "section_break_mwbv",
+   "fieldtype": "Section Break",
+   "label": "Additional Configurations"
+  },
+  {
+   "default": "0",
+   "description": "This will enable customer master creation",
+   "fieldname": "create_customers",
+   "fieldtype": "Check",
+   "label": "Create Customers"
+  },
+  {
+   "description": "This customer will be used if no customer data found",
+   "fieldname": "default_customer",
+   "fieldtype": "Link",
+   "label": "Default Customer",
+   "mandatory_depends_on": "enable_petpooja_apis",
+   "options": "Customer"
+  },
+  {
+   "fieldname": "column_break_wxcl",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "packing_charge_item",
+   "fieldtype": "Link",
+   "label": "Packing Charge Item",
+   "mandatory_depends_on": "enable_petpooja_apis",
+   "options": "Item"
+  },
+  {
+   "fieldname": "service_charge_item",
+   "fieldtype": "Link",
+   "label": "Service Charge Item",
+   "mandatory_depends_on": "enable_petpooja_apis",
+   "options": "Item"
+  },
+  {
+   "fieldname": "rounding_adjustment_account",
+   "fieldtype": "Link",
+   "label": "Rounding Adjustment Account",
+   "mandatory_depends_on": "enable_petpooja_apis",
+   "options": "Account"
+  },
+  {
+   "default": "0",
+   "description": "This will reflect stock ledger impact on invoice creation",
+   "fieldname": "update_stock",
+   "fieldtype": "Check",
+   "label": "Update Stock"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-01-08 14:41:39.206442",
+ "modified_by": "Administrator",
+ "module": "Petpooja Integration",
+ "name": "Petpooja Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

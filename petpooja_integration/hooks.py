@@ -8,7 +8,7 @@ app_license = "mit"
 # Apps
 # ------------------
 
-# required_apps = []
+required_apps = ["frappe/erpnext"]
 
 # Each item in the list will be shown as an app in the apps page
 # add_to_apps_screen = [
@@ -83,12 +83,13 @@ app_license = "mit"
 # ------------
 
 # before_install = "petpooja_integration.install.before_install"
-# after_install = "petpooja_integration.install.after_install"
+after_install = "petpooja_integration.install.after_install"
+after_migrate = "petpooja_integration.setup.after_migrate"
 
 # Uninstallation
 # ------------
 
-# before_uninstall = "petpooja_integration.uninstall.before_uninstall"
+before_uninstall = "petpooja_integration.uninstall.before_uninstall"
 # after_uninstall = "petpooja_integration.uninstall.after_uninstall"
 
 # Integration Setup
