@@ -1,5 +1,6 @@
 import frappe
 from frappe.utils import getdate, get_time
+from petpooja_integration.utils import get_mop_account
 
 @frappe.whitelist(allow_guest=True)
 def response(message, data, success, status_code):
@@ -99,7 +100,7 @@ def create_invoice():
 			sales_invoice_doc.append('items', {
 				'item_code': item.get('item_code'),
 				'item_name': item.get('item_name'),
-				'qty': item.get('qty'),
+				'qty': item.get('quantity'),
 				'rate': item.get('rate'),
 				'amount': item.get('amount'),
 				'income_account': income_account
@@ -149,7 +150,7 @@ def create_invoice():
 		handle_payment(sales_invoice_doc.name, order_details)
 
 		response('Invoice created', { 'doc':sales_invoice_doc.as_dict() }, True, 200)
-	
+
 	except Exception as e:
 		frappe.log_error(frappe.get_traceback(), 'Petpooja Integration Error')
 		response('Something went wrong', {}, False, 500)
@@ -221,73 +222,64 @@ def handle_payment(sales_invoice, order_details):
 	'''
 		Method to handle payment entry against the created Sales Invoice
 	'''
-	if frappe.db.exists('Sales Invoice', sales_invoice):
-		sales_invoice_doc = frappe.get_doc('Sales Invoice', sales_invoice)
+	try:
+		if frappe.db.exists('Sales Invoice', sales_invoice):
+			sales_invoice_doc = frappe.get_doc('Sales Invoice', sales_invoice)
 
-		#Getting Payment Methods
-		payment_methods = []
-		if order_details.get('part_payments', []):
-			for part_payment in order_details.get('part_payments', []):
+			#Getting Payment Methods
+			payment_methods = []
+			if order_details.get('part_payments', []):
+				for part_payment in order_details.get('part_payments', []):
+					payment_methods.append({
+						'method': part_payment.get('payment_type'),
+						'amount': part_payment.get('amount')
+					})
+			else:
 				payment_methods.append({
-					'method': part_payment.get('payment_type'),
-					'amount': part_payment.get('amount')
+					'method': order_details.get('payment_type'),
+					'amount': order_details.get('total')
 				})
-		else:
-			payment_methods.append({
-				'method': order_details.get('payment_type'),
-				'amount': order_details.get('total')
-			})
-		
-		#Creating Payment Entry for each payment method
-		for mode in payment_methods:
-			mode_of_payment = ''
-			if frappe.db.exists('Mode of Payment', { 'petpooja_payment_type': mode.get('method') }):
-				mode_of_payment = frappe.get_value('Mode of Payment', { 'petpooja_payment_type': mode.get('method') }, 'name')
-			if not mode_of_payment:
-				sales_invoice_doc.add_comment(
-					'Comment', 
-					'Mode of Payment mapping not found for {0}, Skipped Payment Entry creation.'.format(frappe.bold(mode.get('method')))
-				)
-				continue
 
-			mode_of_payment_account = get_mop_account(mode_of_payment, sales_invoice_doc.company)
-			if not mode_of_payment_account:
-				sales_invoice_doc.add_comment(
-					'Comment',
-					'Default account not found for Mode of Payment {0}, Skipped Payment Entry creation.'.format(frappe.bold(mode_of_payment))
-				)
-				continue
+			#Creating Payment Entry for each payment method
+			for mode in payment_methods:
+				mode_of_payment = ''
+				if frappe.db.exists('Mode of Payment', { 'petpooja_payment_type': mode.get('method') }):
+					mode_of_payment = frappe.get_value('Mode of Payment', { 'petpooja_payment_type': mode.get('method') }, 'name')
+				if not mode_of_payment:
+					sales_invoice_doc.add_comment(
+						'Comment',
+						'Mode of Payment mapping not found for {0}, Skipped Payment Entry creation.'.format(frappe.bold(mode.get('method')))
+					)
+					continue
 
-			payment_entry = frappe.new_doc('Payment Entry')
-			payment_entry.payment_type = 'Receive'
-			payment_entry.posting_date = getdate(order_details.get('created_on'))
-			payment_entry.party_type = 'Customer'
-			payment_entry.party = sales_invoice_doc.customer
-			payment_entry.reference_no = order_details.get('orderID')
-			payment_entry.reference_date = getdate(order_details.get('created_on'))
-			payment_entry.mode_of_payment = mode_of_payment
-			payment_entry.paid_from = sales_invoice_doc.debit_to
-			payment_entry.paid_to = mode_of_payment_account
-			payment_entry.received_amount = mode.get('amount')
-			payment_entry.paid_amount = mode.get('amount')
-			payment_entry.append('references', {
-				'reference_doctype': 'Sales Invoice',
-				'reference_name': sales_invoice,
-				'allocated_amount': mode.get('amount'),
-				'outstanding_amount': frappe.get_value('Sales Invoice', sales_invoice, 'outstanding_amount'),
-				'paid_amount': mode.get('amount')
-			})
-			payment_entry.save(ignore_permissions=True)
-			payment_entry.submit()
+				mode_of_payment_account = get_mop_account(mode_of_payment, sales_invoice_doc.company)
+				if not mode_of_payment_account:
+					sales_invoice_doc.add_comment(
+						'Comment',
+						'Default account not found for Mode of Payment {0}, Skipped Payment Entry creation.'.format(frappe.bold(mode_of_payment))
+					)
+					continue
 
-def get_mop_account(mode_of_payment, company):
-	'''
-		Method to get default account for a given Mode of Payment and Company
-	'''
-	result = frappe.db.sql('''
-        SELECT default_account
-        FROM `tabMode of Payment Account`
-        WHERE parent=%s AND company=%s
-        LIMIT 1
-    ''', (mode_of_payment, company), as_dict=True)
-	return result[0].default_account if result else None
+				payment_entry = frappe.new_doc('Payment Entry')
+				payment_entry.payment_type = 'Receive'
+				payment_entry.posting_date = getdate(order_details.get('created_on'))
+				payment_entry.party_type = 'Customer'
+				payment_entry.party = sales_invoice_doc.customer
+				payment_entry.reference_no = order_details.get('orderID')
+				payment_entry.reference_date = getdate(order_details.get('created_on'))
+				payment_entry.mode_of_payment = mode_of_payment
+				payment_entry.paid_from = sales_invoice_doc.debit_to
+				payment_entry.paid_to = mode_of_payment_account
+				payment_entry.received_amount = mode.get('amount')
+				payment_entry.paid_amount = mode.get('amount')
+				payment_entry.append('references', {
+					'reference_doctype': 'Sales Invoice',
+					'reference_name': sales_invoice,
+					'allocated_amount': mode.get('amount'),
+					'outstanding_amount': frappe.get_value('Sales Invoice', sales_invoice, 'outstanding_amount'),
+					'paid_amount': mode.get('amount')
+				})
+				payment_entry.save(ignore_permissions=True)
+				payment_entry.submit()
+	except Exception as e:
+		sales_invoice_doc.add_comment('Comment', 'Error while creating Payment Entry: {0}'.format(frappe.bold(str(e))))
