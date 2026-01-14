@@ -9,6 +9,12 @@ def get_mode_of_payment_custom_fields():
 				"fieldtype": "Data",
 				"label": "Petpooja Payment Type",
 				"insert_after": "type",
+			},
+			{
+				"fieldname": "rista_payment_type",
+				"fieldtype": "Data",
+				"label": "Rista Payment Type",
+				"insert_after": "petpooja_payment_type",
 			}
 		]
 	}

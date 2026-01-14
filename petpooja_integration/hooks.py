@@ -146,6 +146,13 @@ before_uninstall = "petpooja_integration.uninstall.before_uninstall"
 # 	}
 # }
 
+doc_events = {
+	"Sales Invoice": {
+		"after_insert": "petpooja_integration.custom_script.sales_invoice.sales_invoice.after_insert",
+		"on_submit": "petpooja_integration.custom_script.sales_invoice.sales_invoice.on_submit",
+	}
+}
+
 # Scheduled Tasks
 # ---------------
 

@@ -1,0 +1,110 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-01-09 14:03:05.254696",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "api_configurations_section",
+  "api_key",
+  "secret_key",
+  "column_break_srbt",
+  "api_base_url",
+  "section_break_bxct",
+  "default_customer",
+  "column_break_dhru",
+  "rounding_adjustment_account",
+  "section_break_ityj",
+  "gst_ledger_mappings"
+ ],
+ "fields": [
+  {
+   "fieldname": "api_key",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "API Key",
+   "reqd": 1
+  },
+  {
+   "fieldname": "secret_key",
+   "fieldtype": "Password",
+   "in_list_view": 1,
+   "label": "Secret Key",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_srbt",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "api_base_url",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "API Base URL",
+   "reqd": 1
+  },
+  {
+   "fieldname": "default_customer",
+   "fieldtype": "Link",
+   "label": "Default Customer",
+   "options": "Customer",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_ityj",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "gst_ledger_mappings",
+   "fieldtype": "Table",
+   "label": "GST Ledger Mappings",
+   "options": "Rista GST Mapping"
+  },
+  {
+   "fieldname": "api_configurations_section",
+   "fieldtype": "Section Break",
+   "label": "API Configurations"
+  },
+  {
+   "fieldname": "section_break_bxct",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_dhru",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "rounding_adjustment_account",
+   "fieldtype": "Link",
+   "label": "Rounding Adjustment Account",
+   "options": "Account",
+   "reqd": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-01-14 14:33:46.006246",
+ "modified_by": "Administrator",
+ "module": "Rista Integration",
+ "name": "Rista Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -1,0 +1,97 @@
+{
+ "actions": [],
+ "creation": "2026-01-13 12:26:30.229449",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "branch_code",
+  "invoice_number",
+  "invoice_date",
+  "invoice_time",
+  "column_break_ddpm",
+  "payload",
+  "invoice_reference_section",
+  "sales_invoice_reference"
+ ],
+ "fields": [
+  {
+   "fieldname": "invoice_number",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Invoice Number",
+   "reqd": 1
+  },
+  {
+   "fieldname": "invoice_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Invoice Date"
+  },
+  {
+   "fieldname": "invoice_time",
+   "fieldtype": "Time",
+   "in_list_view": 1,
+   "label": "Invoice Time"
+  },
+  {
+   "fieldname": "column_break_ddpm",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "invoice_reference_section",
+   "fieldtype": "Section Break",
+   "label": "Invoice Reference"
+  },
+  {
+   "fieldname": "sales_invoice_reference",
+   "fieldtype": "Link",
+   "label": "Sales Invoice Reference",
+   "options": "Sales Invoice"
+  },
+  {
+   "fieldname": "payload",
+   "fieldtype": "JSON",
+   "label": "Payload",
+   "read_only": 1
+  },
+  {
+   "fieldname": "branch_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Branch",
+   "options": "Rista Branch",
+   "reqd": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "in_create": 1,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-01-14 15:19:02.689101",
+ "modified_by": "Administrator",
+ "module": "Rista Integration",
+ "name": "Rista Sales Log",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
